@@ -14,6 +14,10 @@ def init_db():
     conn.commit()
     conn.close()
 
+@app.route('/', methods=['GET'])
+def hello():
+    return 'Hello World !'
+
 @app.route('/login', methods=['POST'])
 def login():
     username = request.form['username']
