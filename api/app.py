@@ -7,7 +7,6 @@ import subprocess
 
 app = Flask(__name__)
 
-# Base de données SQLite non sécurisée
 def init_db():
     conn = sqlite3.connect('test.db')
     c = conn.cursor()
@@ -20,7 +19,6 @@ def login():
     username = request.form['username']
     password = request.form['password']
 
-    # Vulnérabilité : Injection SQL
     conn = sqlite3.connect('test.db')
     c = conn.cursor()
     query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
@@ -38,8 +36,6 @@ def register():
     username = request.form['username']
     password = request.form['password']
 
-    # Vulnérabilité : Mots de passe non hachés
-    # Vulnérabilité supplémentaire : Utilisation d'un algorithme non sécurisé pour hacher
     password_hash = hashlib.md5(password.encode()).hexdigest()
 
     conn = sqlite3.connect('test.db')
@@ -52,8 +48,6 @@ def register():
 
 @app.route('/debug', methods=['GET'])
 def debug():
-    # Vulnérabilité : Information divulguée
-    # Vulnérabilité supplémentaire : Évaluation dynamique non sécurisée
     debug_code = request.args.get('code', '')
     try:
         result = eval(debug_code)
@@ -63,7 +57,6 @@ def debug():
 
 @app.route('/ftp', methods=['GET'])
 def ftp_access():
-    # Vulnérabilité : Utilisation d'un mot de passe codé en dur et d'une bibliothèque FTP non sécurisée
     ftp = ftplib.FTP('ftp.example.com')
     ftp.login(user='admin', passwd='hardcodedpassword')
     files = ftp.nlst()
@@ -73,7 +66,6 @@ def ftp_access():
 @app.route('/execute', methods=['POST'])
 def execute():
     command = request.form['command']
-    # Vulnérabilité : Utilisation de subprocess avec shell=True
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = process.communicate()
     return jsonify({"stdout": stdout.decode(), "stderr": stderr.decode()})
